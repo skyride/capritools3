@@ -2,13 +2,13 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.7-alpine
 
     steps:
       - checkout
       - setup_remote_docker
       - run: |
-          docker-compose run app ./manage.py test
+          docker-compose -f docker-compose-test.yml run app ./manage.py test
 
 workflows:
   version: 2
