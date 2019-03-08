@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  test:
+    machine: true
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          docker-compose run app ./manage.py test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
