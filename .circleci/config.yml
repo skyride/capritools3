@@ -1,6 +1,9 @@
 version: 2
 jobs:
   test:
+    docker:
+      image: circleci/python:3.7
+
     steps:
       - checkout
       - setup_remote_docker
