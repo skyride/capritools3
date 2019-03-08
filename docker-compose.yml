@@ -5,8 +5,9 @@ services:
     environment:
       - ENV=dev
     volumes:
-      - data/:data
-      - /static:static
+      - .:/app
+      - data:/app/data
+      - static:/static
     command: python manage.py runserver 0:8000
     depends_on:
       - db
