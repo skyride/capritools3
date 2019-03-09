@@ -8,7 +8,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
-          docker-compose -f docker-compose-test.yml run app ./manage.py test
+          docker-compose -f docker-compose-test.yml run app pypy3 manage.py test
 
 workflows:
   version: 2
