@@ -1,2 +1,2 @@
 django==2.2b1
-psycopg2
+psycopg2cffi

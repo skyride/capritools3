@@ -5,9 +5,9 @@ services:
     environment:
       - ENV=test
     volumes:
-      - data:/app/data
+      - data:/data
       - static:/static
-    command: python manage.py runserver 0:8000
+    command: pypy3 manage.py runserver 0:8000
     depends_on:
       - db
       - memcached

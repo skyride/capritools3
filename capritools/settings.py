@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 
+try:
+    import psycopg2
+except ImportError:
+    # Fall back to psycopg2cffi
+    from psycopg2cffi import compat
+    compat.register()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ["*"]
@@ -30,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'sde',
     'core',
 ]
 
@@ -74,6 +82,17 @@ DATABASES = {
         'USER': os.environ.get('DATABASE_USER', "postgres"),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', ""),
         'PORT': os.environ.get('DATABASE_PORT', 5432)
+    },
+    'sde': {
+        'ENGINE': "django.db.backends.sqlite3",
+        'NAME': "/data/sqlite-latest.sqlite"
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'memcached:11211',
     }
 }
 
