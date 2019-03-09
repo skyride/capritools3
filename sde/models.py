@@ -193,3 +193,6 @@ class Station(models.Model):
 
     def __str__(self):
         return "%s:%s" % (self.id, self.name)
+
+
+# Translations
