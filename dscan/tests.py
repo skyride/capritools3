@@ -1,5 +1,8 @@
 from django.test import TestCase
 
+from .utils import DscanParser
+
+
 # Create your tests here.
 class DscanParseTest(TestCase):
     dscans = {
@@ -44,3 +47,12 @@ class DscanParseTest(TestCase):
 29633	ダル*	スターゲート（ミンマターシステム）*	1.3AU
 11567	Autistic Fury	アバター*	21km"""
     }
+
+    def test_parse(self):
+        for language, text in self.dscans.items():
+            parser = DscanParser(text)
+            self.assertTupleEqual((7, 0), parser.parse())
+
+            # Use the fortizar object to check values
+            fort_object = parser.dscan.dscan_objects.get(type_id=35833)
+            self.assertEqual("Lantorn - R.I.P. Etienne Picard", fort_object.name)
