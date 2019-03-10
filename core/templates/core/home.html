@@ -1,5 +1,18 @@
 {% extends 'core/base.html' %}
 
 {% block title %}
-    Home
+    {{ nav_title }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <br />
+        <div class="card bg-light">
+            <div class="card-body">
+                <h4 class="card-title">
+                    Welcome to Capritools 3! If you find any bugs please report them <a href="https://github.com/skyride/capritools3/issues">here</a>!
+                </h4>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -27,6 +27,10 @@ ENV = os.environ.get('ENV')
 SECRET_KEY = os.environ.get('SECRET_KEY', "DEVELOPMENT")
 DEBUG = ENV == "dev"
 
+# Personalisation settings
+# These default to those used on the main capritools instance, but
+# you can change them as you please via environment arguments.
+TITLE = os.environ.get('TITLE', "Capritools")
 
 # Application definition
 
@@ -64,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.presentation'
             ],
         },
     },
