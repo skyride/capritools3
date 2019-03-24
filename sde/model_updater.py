@@ -2,8 +2,9 @@ from __future__ import print_function
 import sys
 
 from django.db import transaction
+from psqlextra.query import ConflictAction
 
-from sde import maps
+from . import maps
 
 # Defines some functions for importing
 
@@ -15,6 +16,7 @@ class ModelUpdater:
 
     @transaction.atomic
     def update_model(self, Model, table_name, no_key=False):
+        """DEPRECATED in favour of update_model_upsert"""
         print("Updating %s...   " % Model.__name__, end="")
         sys.stdout.flush()
 
@@ -60,8 +62,30 @@ class ModelUpdater:
 
     
     @transaction.atomic
-    def update_model_pgextras(self):
-        pass
+    def update_model_upsert(self, Model, table_name, no_key=False):
+        """Do model updates using Postgres on_conflict for upserts."""
+        print("Updating %s...   " % Model.__name__, end="")
+        sys.stdout.flush()
+
+        # Get query
+        table_map = getattr(maps, Model.__name__)
+        query = self.query_from_map(table_name, table_map)
+        # Delete all existing results if we have no key
+        if no_key:
+            Model.objects.all().delete()
+
+        # Build list of intended objects
+        def get_objects():
+            self.cursor.execute(query)
+            for result in self.cursor.fetchall():
+                yield {
+                    key: result[i]
+                    for i, key in enumerate([x[0] for x in table_map])
+                }
+
+        objects = list(get_objects())
+        Model.objects.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(objects)
+        print("%s objects" % Model.objects.count())
 
 
     # Generates SQL select query from a map

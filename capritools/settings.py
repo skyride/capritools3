@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
+    'psqlextra',
     'bootstrap4',
 
     'sde',
@@ -85,7 +87,7 @@ WSGI_APPLICATION = 'capritools.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' + os.environ.get('DATABASE_ENGINE', "postgresql"),
+        'ENGINE': 'psqlextra.backend',
         'HOST': os.environ.get('DATABASE_HOST', "db"),
         'NAME': os.environ.get('DATABASE_NAME', "postgres"),
         'USER': os.environ.get('DATABASE_USER', "postgres"),
