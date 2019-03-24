@@ -48,7 +48,8 @@ INSTALLED_APPS = [
 
     'sde',
     'core',
-    'dscan'
+    'dscan',
+    'localscan'
 ]
 
 MIDDLEWARE = [

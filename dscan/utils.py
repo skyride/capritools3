@@ -68,7 +68,6 @@ class DscanParser(object):
         """Detect a solar system based on items in the dscan"""
         # Try celestial matching
         celestial_types = Type.objects.annotate(celestials=Count('map_items')).filter(celestials__gt=0)
-        print(celestial_types)
         for object in self.dscan.dscan_objects.filter(type__in=celestial_types):
             celestial = MapItem.objects.filter(type_id=object.type_id, name=object.name).first()
             if celestial is not None:
