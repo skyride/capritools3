@@ -1,9 +1,9 @@
 <table class="table table-borderless table-sm table-hover table-striped">
-    <tbody>
+    <tbody class="group-listing">
         {% for class, item in items %}
-            <tr>
-                <td class="text-center {{ class }} scan-count">{{ item.count }}</td>
-                <td class="scan-name">{{ item.name }}</td>
+            <tr data-group-id="{{ item.id }}" class="d-flex">
+                <td class="col-2 text-center {{ class }} scan-count">{{ item.count }}</td>
+                <td class="col-10 scan-name">{{ item.name }}</td>
             </tr>
         {% endfor %}
     </tbody>

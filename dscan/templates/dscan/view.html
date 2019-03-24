@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}
     {% if dscan.system %}
@@ -8,6 +9,10 @@
     {% endif %}
     ({{ ships_count }})
     {{ dscan.created|date:"H:i" }}
+{% endblock %}
+
+{% block extra_head %}
+    <script src="{% static 'dscan/js/dscan.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -26,16 +31,18 @@
             </div>
         </div>
 
+        <br />
+
         <div class="row">
             <div class="col-sm-5">
-                <table class="table table-borderless table-sm table-hover table-striped">
+                <table class="table table-sm table-borderless table-striped table-hover">
                     <tbody class="item-listing">
                         {% for class, item in ships %}
-                            <tr>
-                                <td class="text-center {{ class }} scan-count">{{ item.count }}</td>
-                                <td class="scan-name">{{ item.name }}</td>
-                                <td class="icon float-right">
-                                    <img src="{{ item.image64 }}">
+                            <tr data-group-id="{{ item.group_id }}" class="d-flex">
+                                <td class="col-sm-2 text-center {{ class }} scan-count">{{ item.count }}</td>
+                                <td class="col-sm-9 scan-name">{{ item.name }}</td>
+                                <td class="col-sm-1 icon">
+                                    <img class="float-right" src="{{ item.image64 }}">
                                 </td>
                             </tr>
                         {% endfor %}
