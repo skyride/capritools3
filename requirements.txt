@@ -4,3 +4,4 @@ python-memcached
 pywatchman
 django-bootstrap4
 django-postgres-extra==1.20
+django-tables2==2.0.5
