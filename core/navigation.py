@@ -17,7 +17,6 @@ class NavigationController(object):
         url_name: The reverse for the app
         """
         self.apps.append((name, url_name, reverse(url_name)))
-        print(self.apps)
 
 
 navigation_controller = NavigationController()

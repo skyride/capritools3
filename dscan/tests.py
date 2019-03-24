@@ -56,3 +56,15 @@ class DscanParseTest(TestCase):
             # Use the fortizar object to check values
             fort_object = parser.dscan.dscan_objects.get(type_id=35833)
             self.assertEqual("Lantorn - R.I.P. Etienne Picard", fort_object.name)
+
+
+    def test_exceptions(self):
+        from .exceptions import DscanParseException
+
+        self.assertRaises(DscanParseException, DscanParser("").parse)
+        self.assertRaises(DscanParseException, DscanParser("asd asd asd asd").parse)
+        self.assertRaises(DscanParseException, DscanParser("asd\tasd\t15\tasd").parse)
+        self.assertRaises(DscanParseException, DscanParser("\n\n").parse)
+        self.assertRaises(DscanParseException, DscanParser("\nasd\n").parse)
+
+        self.assertEqual(DscanParser("29633	ダル*	スターゲート（ミンマターシステム）*	1.3AU\nasd").parse(), (1, 1))

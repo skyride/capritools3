@@ -1,6 +1,7 @@
 from django.db import transaction
 
-from dscan.models import Dscan, DscanObject
+from .exceptions import DscanParseException
+from .models import Dscan, DscanObject
 
 
 class DscanParser(object):
@@ -16,7 +17,9 @@ class DscanParser(object):
     def parse_line(self, line):
         # Dscan lines are columns seperated by tabs
         cols = line.split("\t")
-        return DscanObject(
+        assert len(cols) == 4
+
+        return DscanObject.objects.create(
             scan=self.dscan,
             type_id=cols[0],
             name=cols[1],
@@ -37,15 +40,14 @@ class DscanParser(object):
         )
 
         # A dscan is a table split by new lines and tabs
-        objects = []
         for line in self.text.split("\n"):
             try:
-                objects.append(self.parse_line(line))
+                self.parse_line(line)
                 self.dscan.accepted += 1
             except:
                 self.dscan.rejected += 1
 
-        # Save dscan
-        DscanObject.objects.bulk_create(objects)
+        if self.dscan.accepted < 1:
+            raise DscanParseException("Couldn't parse any lines of your scan into a dscan")
         
         return self.dscan.accepted, self.dscan.rejected

@@ -1,6 +1,8 @@
 from django.views import View
 from django.shortcuts import render
 
+from .utils import DscanParser
+
 
 class DscanSubmit(View):
     """Submit a new dscan"""
