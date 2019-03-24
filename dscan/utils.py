@@ -49,5 +49,12 @@ class DscanParser(object):
 
         if self.dscan.accepted < 1:
             raise DscanParseException("Couldn't parse any of the lines in the dscan you provided.")
+
+        self.detect_system()
         
         return self.dscan.accepted, self.dscan.rejected
+
+
+    def detect_system(self):
+        # Try looking for celestails
+        pass

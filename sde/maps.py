@@ -127,5 +127,14 @@ Station = [
     ('system_id', 'solarSystemID'),
     ('x', 'x'),
     ('y', 'y'),
-    ('z', 'z'),
+    ('z', 'z')
+]
+
+MapItem = [
+    ('id', 'itemID'),
+    ('system_id', 'solarSystemID'),
+    ('name', 'itemName'),
+    ('x', 'x'),
+    ('y', 'y'),
+    ('z', 'z')
 ]

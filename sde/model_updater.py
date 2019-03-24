@@ -58,6 +58,11 @@ class ModelUpdater:
 
         print("%s objects" % len(results))
 
+    
+    @transaction.atomic
+    def update_model_pgextras(self):
+        pass
+
 
     # Generates SQL select query from a map
     def query_from_map(self, table_name, table_map):

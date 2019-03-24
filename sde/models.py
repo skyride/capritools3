@@ -204,4 +204,13 @@ class Station(models.Model):
         return "%s:%s" % (self.id, self.name)
 
 
-# Translations
+# Maps denormalised
+class MapItem(models.Model):
+    type = models.ForeignKey(Type, null=True, related_name="map_items", on_delete=models.SET_NULL)
+    system = models.ForeignKey(System, null=True, related_name="map_items", on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100, null=True, db_index=True)
+
+    x = models.FloatField(default=0)
+    y = models.FloatField(default=0)
+    z = models.FloatField(default=0)
