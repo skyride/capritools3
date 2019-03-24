@@ -6,7 +6,7 @@
     {% else %}
         Unknown
     {% endif %}
-    ({{ ships.count }})
+    ({{ ships_count }})
     {{ dscan.created|date:"H:i" }}
 {% endblock %}
 
@@ -16,9 +16,9 @@
         <div class="row align-items-end">
             <div class="col-sm">
                 {% if dscan.system %}
-                    <h2>{{ dscan.system }} ({{ ships.count }})</h2>
+                    <h2>{{ dscan.system }} ({{ ships_count }})</h2>
                 {% else %}
-                    <h2><i>Unknown System ({{ ships.count }})</i></h2>
+                    <h2><i>Unknown System ({{ ships_count }})</i></h2>
                 {% endif %}
             </div>
             <div class="col-sm text-right">
@@ -30,9 +30,9 @@
             <div class="col-sm-5">
                 <table class="table table-borderless table-sm table-hover table-striped">
                     <tbody class="item-listing">
-                        {% for item in ships %}
+                        {% for class, item in ships %}
                             <tr>
-                                <td class="text-center table-warning scan-count">{{ item.count }}</td>
+                                <td class="text-center {{ class }} scan-count">{{ item.count }}</td>
                                 <td class="scan-name">{{ item.name }}</td>
                                 <td class="icon float-right">
                                     <img src="{{ item.image64 }}">

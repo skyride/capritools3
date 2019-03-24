@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 from sde.models import Type, Group
 
+from . import constants
 from .exceptions import DscanParseException
 from .models import Dscan
 from .utils import DscanParser
@@ -32,14 +33,14 @@ class DscanSubmit(View):
 
 class DscanView(View):
     """View a dscan"""
-    supers = [30, 659]
-    caps = [883, 547, 485, 1538, 513, 902]
+    
 
     def get(self, request, key):
         dscan = get_object_or_404(Dscan, key=key)
 
         context = {
             'dscan': dscan,
+            'ships_count': self._get_ships(dscan).count(),
             'ships': self.get_ships(dscan),
             'subcaps': self.get_subcaps(dscan),
             'caps': self.get_caps(dscan)
@@ -47,7 +48,7 @@ class DscanView(View):
         return render(request, "dscan/view.html", context)
 
 
-    def get_ships(self, dscan):
+    def _get_ships(self, dscan):
         return Type.objects.filter(
             dscan_objects__scan=dscan,
             group__category_id=6,
@@ -55,13 +56,29 @@ class DscanView(View):
                 count=Count('dscan_objects')
             ).order_by('-count', 'name')
 
+    def get_ships(self, dscan):
+        logistics = set(constants.logistics.values_list('id', flat=True))
+        support = set(constants.support.values_list('id', flat=True))
+
+        for type in self._get_ships(dscan):
+            if type.id in constants.super_groups:
+                yield ("table-danger", type)
+            elif type.id in constants.cap_groups:
+                yield ("table-warning", type)
+            elif type.id in logistics:
+                yield ("table-success", type)
+            elif type.id in support:
+                yield ("table-info", type)
+            else:
+                yield("table-active", type)
+
 
     def get_subcaps(self, dscan):
         return Group.objects.filter(
             types__dscan_objects__scan=dscan,
             category_id=6
         ).exclude(
-            id__in=self.supers + self.caps
+            id__in=constants.super_groups + constants.cap_groups
         ).annotate(
             count=Count('types__dscan_objects')
         ).order_by('-count', 'name')
@@ -71,7 +88,7 @@ class DscanView(View):
         return Group.objects.filter(
             types__dscan_objects__scan=dscan,
             category_id=6,
-            id__in=self.supers + self.caps
+            id__in=constants.super_groups + constants.cap_groups
         ).annotate(
             count=Count('types__dscan_objects')
         ).order_by('-count', 'name')
