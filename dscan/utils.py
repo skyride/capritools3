@@ -48,6 +48,6 @@ class DscanParser(object):
                 self.dscan.rejected += 1
 
         if self.dscan.accepted < 1:
-            raise DscanParseException("Couldn't parse any lines of your scan into a dscan")
+            raise DscanParseException("Couldn't parse any of the lines in the dscan you provided.")
         
         return self.dscan.accepted, self.dscan.rejected
