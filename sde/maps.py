@@ -132,6 +132,7 @@ Station = [
 
 MapItem = [
     ('id', 'itemID'),
+    ('type_id', 'typeID'),
     ('system_id', 'solarSystemID'),
     ('name', 'itemName'),
     ('x', 'x'),

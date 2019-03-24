@@ -38,7 +38,7 @@ class DscanView(View):
 
         context = {
             'dscan': dscan,
-            'ships_count': self._get_ships(dscan).count(),
+            'ships_count': self.get_ship_count(dscan),
             'ships': self.get_ships(dscan),
             'subcaps': self.get_subcaps(dscan),
             'caps': self.get_caps(dscan)
@@ -53,6 +53,11 @@ class DscanView(View):
             ).annotate(
                 count=Count('dscan_objects')
             ).order_by('-count', 'name')
+
+    def get_ship_count(self, dscan):
+        return dscan.dscan_objects.filter(
+            type__group__category_id=6
+        ).count()
 
     def get_ships(self, dscan):
         logistics = set(constants.LOGISTICS.values_list('id', flat=True))

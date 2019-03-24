@@ -1,4 +1,7 @@
 from django.db import transaction
+from django.db.models import Count
+
+from sde.models import Type, MapItem
 
 from .exceptions import DscanParseException
 from .models import Dscan, DscanObject
@@ -56,5 +59,17 @@ class DscanParser(object):
 
 
     def detect_system(self):
-        # Try looking for celestails
-        pass
+        system = self._detect_system()
+        if system is not None:
+            self.dscan.system = system
+            self.dscan.save()
+
+    def _detect_system(self):
+        """Detect a solar system based on items in the dscan"""
+        # Try celestial matching
+        celestial_types = Type.objects.annotate(celestials=Count('map_items')).filter(celestials__gt=0)
+        print(celestial_types)
+        for object in self.dscan.dscan_objects.filter(type__in=celestial_types):
+            celestial = MapItem.objects.filter(type_id=object.type_id, name=object.name).first()
+            if celestial is not None:
+                return celestial.system
