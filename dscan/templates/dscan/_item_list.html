@@ -1,8 +1,8 @@
 <table class="table table-borderless table-sm table-hover table-striped">
     <tbody>
-        {% for item in items %}
+        {% for class, item in items %}
             <tr>
-                <td class="text-center table-warning scan-count">{{ item.count }}</td>
+                <td class="text-center {{ class }} scan-count">{{ item.count }}</td>
                 <td class="scan-name">{{ item.name }}</td>
             </tr>
         {% endfor %}

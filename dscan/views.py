@@ -33,8 +33,6 @@ class DscanSubmit(View):
 
 class DscanView(View):
     """View a dscan"""
-    
-
     def get(self, request, key):
         dscan = get_object_or_404(Dscan, key=key)
 
@@ -57,13 +55,13 @@ class DscanView(View):
             ).order_by('-count', 'name')
 
     def get_ships(self, dscan):
-        logistics = set(constants.logistics.values_list('id', flat=True))
-        support = set(constants.support.values_list('id', flat=True))
+        logistics = set(constants.LOGISTICS.values_list('id', flat=True))
+        support = set(constants.SUPPORT.values_list('id', flat=True))
 
         for type in self._get_ships(dscan):
-            if type.id in constants.super_groups:
+            if type.group_id in constants.SUPER_GROUPS:
                 yield ("table-danger", type)
-            elif type.id in constants.cap_groups:
+            elif type.group_id in constants.CAP_GROUPS:
                 yield ("table-warning", type)
             elif type.id in logistics:
                 yield ("table-success", type)
@@ -73,22 +71,42 @@ class DscanView(View):
                 yield("table-active", type)
 
 
-    def get_subcaps(self, dscan):
+    def _get_subcaps(self, dscan):
         return Group.objects.filter(
             types__dscan_objects__scan=dscan,
             category_id=6
         ).exclude(
-            id__in=constants.super_groups + constants.cap_groups
+            id__in=constants.SUPER_GROUPS + constants.CAP_GROUPS
         ).annotate(
             count=Count('types__dscan_objects')
         ).order_by('-count', 'name')
 
+    def get_subcaps(self, dscan):
+        return self.group_class_pairs(self._get_subcaps(dscan))
 
-    def get_caps(self, dscan):
+
+    def _get_caps(self, dscan):
         return Group.objects.filter(
             types__dscan_objects__scan=dscan,
             category_id=6,
-            id__in=constants.super_groups + constants.cap_groups
+            id__in=constants.SUPER_GROUPS + constants.CAP_GROUPS
         ).annotate(
             count=Count('types__dscan_objects')
         ).order_by('-count', 'name')
+
+    def get_caps(self, dscan):
+        return self.group_class_pairs(self._get_caps(dscan))
+
+    
+    def group_class_pairs(self, groups):
+        for group in groups:
+            if group.id in constants.SUPER_GROUPS:
+                yield ("table-danger", group)
+            elif group.id in constants.CAP_GROUPS:
+                yield ("table-warning", group)
+            elif group.id in constants.LOGISTICS_GROUPS:
+                yield ("table-success", group)
+            elif group.id in constants.SUPPORT_GROUPS:
+                yield ("table-info", group)
+            else:
+                yield ("table-active", group)
