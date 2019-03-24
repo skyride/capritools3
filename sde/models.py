@@ -3,11 +3,10 @@ from __future__ import unicode_literals
 from math import pow, sqrt
 
 from django.db import models
-from psqlextra.models import PostgresModel
 
 
 # Map
-class Region(PostgresModel):
+class Region(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     x = models.FloatField()
@@ -19,7 +18,7 @@ class Region(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class Constellation(PostgresModel):
+class Constellation(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     region = models.ForeignKey(Region, related_name="constellations", on_delete=models.CASCADE)
@@ -32,7 +31,7 @@ class Constellation(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class System(PostgresModel):
+class System(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     region = models.ForeignKey(Region, related_name="systems", on_delete=models.CASCADE)
@@ -68,7 +67,7 @@ class System(PostgresModel):
             return distance
 
 
-class SystemJump(PostgresModel):
+class SystemJump(models.Model):
     origin = models.ForeignKey(System, related_name="jumps_origin", on_delete=models.CASCADE)
     destination = models.ForeignKey(System, related_name="jumps_destination", on_delete=models.CASCADE)
 
@@ -77,7 +76,7 @@ class SystemJump(PostgresModel):
 
 
 # Types
-class MarketGroup(PostgresModel):
+class MarketGroup(models.Model):
     id = models.IntegerField(primary_key=True)
     parent = models.ForeignKey('self', null=True, default=None, db_constraint=False, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -89,7 +88,7 @@ class MarketGroup(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class Category(PostgresModel):
+class Category(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     icon_id = models.IntegerField(null=True)
@@ -99,7 +98,7 @@ class Category(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class Group(PostgresModel):
+class Group(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     category = models.ForeignKey(Category, related_name="groups", on_delete=models.CASCADE)
@@ -113,7 +112,7 @@ class Group(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class Type(PostgresModel):
+class Type(models.Model):
     id = models.IntegerField(primary_key=True)
     group = models.ForeignKey(Group, related_name="types", null=True, default=None, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_index=True)
@@ -141,7 +140,7 @@ class Type(PostgresModel):
         return f"https://imageserver.eveonline.com/Render/{self.id}_{size}.png"
 
 
-class AttributeCategory(PostgresModel):
+class AttributeCategory(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, null=True)
     description = models.CharField(max_length=200, null=True)
@@ -150,7 +149,7 @@ class AttributeCategory(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class AttributeType(PostgresModel):
+class AttributeType(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=400)
     category = models.ForeignKey(AttributeCategory, null=True, db_constraint=False, related_name="types", on_delete=models.CASCADE)
@@ -168,7 +167,7 @@ class AttributeType(PostgresModel):
         return "%s:%s" % (self.id, self.name)
 
 
-class TypeAttribute(PostgresModel):
+class TypeAttribute(models.Model):
     type = models.ForeignKey(Type, related_name="attributes", on_delete=models.CASCADE)
     attribute = models.ForeignKey(AttributeType, related_name="types", on_delete=models.CASCADE)
     value_int = models.IntegerField(null=True)
@@ -188,7 +187,7 @@ class TypeAttribute(PostgresModel):
         )
 
 
-class Station(PostgresModel):
+class Station(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, db_index=True)
     type = models.ForeignKey(Type, null=True, default=None, on_delete=models.CASCADE)
@@ -206,7 +205,7 @@ class Station(PostgresModel):
 
 
 # Maps denormalised
-class MapItem(PostgresModel):
+class MapItem(models.Model):
     type = models.ForeignKey(Type, null=True, related_name="map_items", on_delete=models.SET_NULL)
     system = models.ForeignKey(System, null=True, related_name="map_items", on_delete=models.CASCADE)
 

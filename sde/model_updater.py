@@ -3,6 +3,7 @@ import sys
 
 from django.db import transaction
 from psqlextra.query import ConflictAction
+from psqlextra.util import postgres_manager
 
 from . import maps
 
@@ -84,7 +85,8 @@ class ModelUpdater:
                 }
 
         objects = list(get_objects())
-        Model.objects.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(objects)
+        with postgres_manager(Model) as manager:
+            manager.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(objects)
         print("%s objects" % Model.objects.count())
 
 
