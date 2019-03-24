@@ -130,6 +130,15 @@ class Type(models.Model):
     def __str__(self):
         return "%s:%s" % (self.id, self.name)
 
+    def image32(self):
+        return self._image_url(32)
+
+    def image64(self):
+        return self._image_url(64)
+
+    def _image_url(self, size):
+        return f"https://imageserver.eveonline.com/Render/{self.id}_{size}.png"
+
 
 class AttributeCategory(models.Model):
     id = models.IntegerField(primary_key=True)

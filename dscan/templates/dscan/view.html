@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    {% if dscan.system %}
+        {{ dscan.system }}
+    {% else %}
+        Unknown
+    {% endif %}
+    ({{ ships.count }})
+    {{ dscan.created|date:"H:i" }}
+{% endblock %}
+
+{% block body %}
+    <br />
+    <div class="container">
+        <div class="row align-items-end">
+            <div class="col-sm">
+                {% if dscan.system %}
+                    <h2>{{ dscan.system }} ({{ ships.count }})</h2>
+                {% else %}
+                    <h2><i>Unknown System ({{ ships.count }})</i></h2>
+                {% endif %}
+            </div>
+            <div class="col-sm text-right">
+                <h5>{{ dscan.created }} ET</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-5">
+                <table class="table table-borderless table-sm table-hover table-striped">
+                    <tbody class="item-listing">
+                        {% for item in ships %}
+                            <tr>
+                                <td class="text-center table-warning scan-count">{{ item.count }}</td>
+                                <td class="scan-name">{{ item.name }}</td>
+                                <td class="icon float-right">
+                                    <img src="{{ item.image64 }}">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-7">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% include "dscan/_item_list.html" with items=subcaps %}
+                    </div>
+                    <div class="col-sm-6">
+                        {% include "dscan/_item_list.html" with items=caps %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
