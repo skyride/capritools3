@@ -7,4 +7,4 @@ class DscanConfig(AppConfig):
     name = 'dscan'
 
     def ready(self):
-        navigation_controller.add_app("Dscan", "dscan:submit")
+        navigation_controller.add("Dscan", "dscan:submit")

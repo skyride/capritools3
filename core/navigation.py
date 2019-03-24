@@ -7,7 +7,7 @@ class NavigationController(object):
     """
     apps = []
 
-    def add_app(self, name, url_name):
+    def add(self, name, url_name):
         """
         Add an app to the navigation. Note that an "app" in this context refers simply to a tool from
         the users perspective and not necessarily an actual django application. A given django app
