@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from django.http.response import HttpResponseRedirect
 
 from .utils import DscanParser
 
@@ -49,6 +50,8 @@ class DscanParseTest(TestCase):
     }
 
     def test_parse(self):
+        c = Client()
+
         for language, text in self.dscans.items():
             parser = DscanParser(text)
             self.assertTupleEqual((7, 0), parser.parse())
@@ -56,6 +59,13 @@ class DscanParseTest(TestCase):
             # Use the fortizar object to check values
             fort_object = parser.dscan.dscan_objects.get(type_id=35833)
             self.assertEqual("Lantorn - R.I.P. Etienne Picard", fort_object.name)
+
+            # Follow a user story of submitting a scan then following the redirect to view it
+            self.assertEqual(c.get("/dscan/").status_code, 200)
+            response = c.post("/dscan/", {'dscan': text})
+            self.assertIsInstance(response, HttpResponseRedirect)
+            response = c.get(response.url)
+            self.assertEqual(response.status_code, 200)
 
 
     def test_exceptions(self):
