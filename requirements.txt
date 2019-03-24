@@ -2,3 +2,4 @@ django<2.3
 psycopg2cffi
 python-memcached
 pywatchman
+django-bootstrap4
