@@ -51,7 +51,7 @@ class System(models.Model):
     security_class = models.CharField(max_length=2, null=True)
 
     def __str__(self):
-        return "%s:%s" % (self.id, self.name)
+        return self.name
 
 
     # Compares distance between self and a target system
@@ -128,7 +128,7 @@ class Type(models.Model):
     sell = models.DecimalField(max_digits=16, decimal_places=2, default=0)
 
     def __str__(self):
-        return "%s:%s" % (self.id, self.name)
+        return self.name
 
     def image32(self):
         return self._image_url(32)
