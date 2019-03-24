@@ -41,7 +41,8 @@ class DscanView(View):
             'ships_count': self.get_ship_count(dscan),
             'ships': self.get_ships(dscan),
             'subcaps': self.get_subcaps(dscan),
-            'caps': self.get_caps(dscan)
+            'caps': self.get_caps(dscan),
+            'structures': self.get_structures(dscan)
         }
         return render(request, "dscan/view.html", context)
 
@@ -50,14 +51,9 @@ class DscanView(View):
         return Type.objects.filter(
             dscan_objects__scan=dscan,
             group__category_id=6,
-            ).annotate(
-                count=Count('dscan_objects')
-            ).order_by('-count', 'name')
-
-    def get_ship_count(self, dscan):
-        return dscan.dscan_objects.filter(
-            type__group__category_id=6
-        ).count()
+        ).annotate(
+            count=Count('dscan_objects')
+        ).order_by('-count', 'name')
 
     def get_ships(self, dscan):
         logistics = set(constants.LOGISTICS.values_list('id', flat=True))
@@ -74,6 +70,24 @@ class DscanView(View):
                 yield ("table-info", type)
             else:
                 yield("table-active", type)
+
+
+    def get_ship_count(self, dscan):
+        return dscan.dscan_objects.filter(
+            type__group__category_id=6
+        ).count()
+
+    
+    def get_structures(self, dscan):
+        types = Type.objects.filter(
+            dscan_objects__scan=dscan,
+            group__category_id=65,
+        ).annotate(
+            count=Count('dscan_objects')
+        ).order_by('-count', 'name')
+
+        for type in types:
+            yield ("table-active", type)
 
 
     def _get_subcaps(self, dscan):

@@ -35,28 +35,17 @@
 
         <div class="row">
             <div class="col-sm-5">
-                <table class="table table-sm table-borderless table-striped table-hover">
-                    <tbody class="item-listing">
-                        {% for class, item in ships %}
-                            <tr data-group-id="{{ item.group_id }}" class="d-flex">
-                                <td class="col-sm-2 text-center {{ class }} scan-count">{{ item.count }}</td>
-                                <td class="col-sm-9 scan-name">{{ item.name }}</td>
-                                <td class="col-sm-1 icon">
-                                    <img class="float-right" src="{{ item.image64 }}">
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    {% include "dscan/_item_list.html" with items=ships %}
             </div>
 
             <div class="col-sm-7">
                 <div class="row">
                     <div class="col-sm-6">
-                        {% include "dscan/_item_list.html" with items=subcaps %}
+                        {% include "dscan/_group_list.html" with items=subcaps %}
                     </div>
                     <div class="col-sm-6">
-                        {% include "dscan/_item_list.html" with items=caps %}
+                        {% include "dscan/_group_list.html" with items=caps %}
+                        {% include "dscan/_item_list.html" with items=structures %}
                     </div>
                 </div>
             </div>

@@ -1,9 +1,12 @@
-<table class="table table-borderless table-sm table-hover table-striped">
-    <tbody class="group-listing">
+<table class="table table-sm table-borderless table-striped table-hover">
+    <tbody class="item-listing">
         {% for class, item in items %}
-            <tr data-group-id="{{ item.id }}" class="d-flex">
-                <td class="col-2 text-center {{ class }} scan-count">{{ item.count }}</td>
-                <td class="col-10 scan-name">{{ item.name }}</td>
+            <tr data-group-id="{{ item.group_id }}" class="d-flex">
+                <td class="col-sm-2 text-center {{ class }} scan-count">{{ item.count }}</td>
+                <td class="col-sm-9 scan-name">{{ item.name }}</td>
+                <td class="col-sm-1 icon">
+                    <img class="float-right" src="{{ item.image64 }}">
+                </td>
             </tr>
         {% endfor %}
     </tbody>
