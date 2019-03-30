@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}{{ paste.key }}{% endblock %}
+
+{% block body %}
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <h4>{{ paste.created }} ET</h4>
+            </div>
+        </div>
+        <textarea id="text" name="text" class="form-control text-monospace" disabled>{{ paste.text }}</textarea>
+    </div>
+    
+    <script>
+        $(function() {
+            var textarea = document.getElementById('text');
+            textarea.style.height = (textarea.scrollHeight+5)+"px";
+        });
+    </script>
+{% endblock %}

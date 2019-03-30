@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load bootstrap4 %}
 
 {% block title %}New Paste - {{ nav_title }}{% endblock %}
 
@@ -12,8 +13,12 @@
         </p>
 
         <form method="POST">
-            <div class="form-group">
-                <textarea name="localscan" class="form-control text-monospace" rows="8"></textarea>
+            {% bootstrap_field form.text show_label=False placeholder="" field_class="text-monospace" %}
+            <div class="row">
+                <div class="col-sm-5">
+                    {% bootstrap_field form.expires %}
+                    {% bootstrap_field form.password placeholder="Optional" %}
+                </div>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
