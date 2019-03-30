@@ -7,3 +7,32 @@ class LocalscanParseTests(TestCase):
         c = Client()
 
         self.assertEqual(c.get("/local/").status_code, 200)
+
+
+    def test_names_to_ids(self):
+        from .utils import LocalscanParser
+        p = LocalscanParser(None)
+
+        self.assertListEqual(list(p._names_to_ids("Capri Sun KraftFoods")), [93417038])
+        self.assertListEqual(
+            list(p._names_to_ids("Capri Sun KraftFoods\nCapri Sun SUPERFOODS")),
+            [93417038, 94726691])
+        self.assertListEqual(list(p._names_to_ids("")), [])
+
+        # Test garbage input gets silently ignored
+        self.assertListEqual(list(p._names_to_ids("this name has too many spaces to be a valid eve character name")), [])
+        self.assertListEqual(list(p._names_to_ids("this one has *special characters* that would /NEVER/ exist in @EVEOnline")), [])
+
+
+    def test_ids_to_affiliations(self):
+        from .utils import LocalscanParser
+        p = LocalscanParser(None)
+
+        self.assertEqual(len(list(p._ids_to_affiliations([93417038]))), 1)
+        self.assertEqual(len(list(p._ids_to_affiliations([93417038, 94726691]))), 2)
+
+
+    def test_parse(self):
+        from .utils import LocalscanParser
+
+        LocalscanParser("Capri Sun KraftFoods").parse()
