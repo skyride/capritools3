@@ -14,13 +14,13 @@ jobs:
             docker-compose -f docker-compose-test.yml pull
       - run:
           name: Run unit tests
-          command: docker-compose -f docker-compose-test.yml run app pypy3 manage.py test
+          command: docker-compose -f docker-compose-test.yml run app ./manage.py test
       - run:
           name: Test database migrations
-          command: docker-compose -f docker-compose-test.yml run app pypy3 manage.py migrate
+          command: docker-compose -f docker-compose-test.yml run app ./manage.py migrate
       - run:
           name: Test fetching and updating SDE
-          command: docker-compose -f docker-compose-test.yml run app pypy3 manage.py updatesde
+          command: docker-compose -f docker-compose-test.yml run app ./manage.py updatesde
 
 workflows:
   version: 2
