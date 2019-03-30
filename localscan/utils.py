@@ -1,3 +1,5 @@
+import requests
+
 from django.db import transaction
 
 from core.bulk import hydrate
@@ -6,7 +8,7 @@ from core.models import Alliance, Corporation, Character
 from core.utils import chunker
 
 from .exceptions import LocalscanParseException
-from .models import Localscan, LocalscanItem
+from .models import Localscan, LocalscanItem, Coalition
 
 
 class LocalscanParser(object):
@@ -14,6 +16,7 @@ class LocalscanParser(object):
     Parses localscan text into a localscan object set.
     """
     scan = None
+    coalitions_parsed = True
 
     def __init__(self, text):
         self.text = text
@@ -35,6 +38,7 @@ class LocalscanParser(object):
         hydrate(Corporation, corporation_ids)
         character_ids = [obj['character_id'] for obj in affiliations if 'character_id' in obj]
         hydrate(Character, character_ids)
+        alliance_coalition_map = self.get_alliance_coalition_map(alliance_ids)
 
         # Create local scan item entries
         LocalscanItem.objects.bulk_create([
@@ -43,7 +47,8 @@ class LocalscanParser(object):
                 character_id=affiliation.get('character_id', None),
                 corporation_id=affiliation.get('corporation_id', None),
                 alliance_id=affiliation.get('alliance_id', None),
-                faction_id=affiliation.get('faction_id', None)
+                faction_id=affiliation.get('faction_id', None),
+                coalition=alliance_coalition_map.get(affiliation.get('alliance_id'))
             )
             for affiliation in affiliations
         ])
@@ -71,3 +76,25 @@ class LocalscanParser(object):
             response = api.post("/latest/characters/affiliation/", json=chunk)
             for affiliation in response.json():
                 yield affiliation
+
+
+    def get_alliance_coalition_map(self, alliance_ids):
+        alliance_ids = set(alliance_ids)
+        response = requests.get("http://rischwa.net/api/coalitions/current")
+        alliance_coalition_map = {}
+        if response.status_code == 200:
+            coalition_data = response.json()['coalitions']
+            for coalition in coalition_data:
+                for alliance in coalition['alliances']:
+                    if alliance['id'] in alliance_ids:
+                        obj, _ = Coalition.objects.get_or_create(
+                            scan=self.scan,
+                            _id=coalition['_id'],
+                            name=coalition['name'],
+                            colour=coalition['color']
+                        )
+                        alliance_coalition_map[alliance['id']] = obj
+        else:
+            self.coalitions_parsed = False
+
+        return alliance_coalition_map

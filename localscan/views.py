@@ -7,7 +7,7 @@ from core.models import Alliance, Corporation, Character
 from sde.models import Faction
 
 from .exceptions import LocalscanParseException
-from .models import Localscan, LocalscanItem
+from .models import Localscan, LocalscanItem, Coalition
 from .utils import LocalscanParser
 
 
@@ -44,6 +44,8 @@ class LocalscanView(View):
             'alliances': Alliance.objects.filter(localscan_items__scan=scan).annotate(
                 pilots=Count('localscan_items')).order_by('-pilots'),
             'corporations': Corporation.objects.filter(localscan_items__scan=scan).annotate(
-                pilots=Count('localscan_items')).order_by('-pilots')
+                pilots=Count('localscan_items')).order_by('-pilots'),
+            'coalitions': Coalition.objects.filter(items__scan=scan).annotate(
+                pilots=Count('items')).order_by('-pilots')
         }
         return render(request, "localscan/view.html", context)

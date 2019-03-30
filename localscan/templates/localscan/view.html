@@ -20,6 +20,7 @@
 
         <div class="row">
             <div class="col-sm">
+                {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
                 {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
                 {% include "localscan/_percentage_bar.html" with items=alliances pilot_count=pilot_count %}
                 {% include "localscan/_percentage_bar.html" with items=corporations pilot_count=pilot_count %}
@@ -29,13 +30,22 @@
         <br />
 
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 {% include "localscan/_item_list.html" with items=alliances %}
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 {% include "localscan/_item_list.html" with items=factions %}
                 {% include "localscan/_item_list_sm.html" with items=corporations %}
             </div>
+            <div class="col-sm-4">
+                {% include "localscan/_coalition_list.html" with items=coalitions %}
+            </div>
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
 {% endblock %}
