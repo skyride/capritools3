@@ -24,7 +24,9 @@
 
         <div class="row">
             <div class="col-sm">
-                {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
+                {% if show_factions_bar %}
+                    {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
+                {% endif %}
                 {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
                 {% include "localscan/_percentage_bar_tuple.html" with items=alliances pilot_count=pilot_count %}
                 {% if corporations|length < 30 %}

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.db.models import Count, F
+from django.db.models import Count, Sum
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -39,6 +39,7 @@ class LocalscanView(View):
         context = {
             'scan': scan,
             'pilot_count': scan.items.count(),
+            'show_factions_bar': self.show_factions_bar(scan),
             'factions': list(self.get_factions(scan)),
             'alliances': list(self.get_alliances(scan)),
             'corporations': list(self.get_corporations(scan)),
@@ -50,6 +51,11 @@ class LocalscanView(View):
     def get_factions(self, scan):
         return Faction.objects.filter(localscan_items__scan=scan).annotate(
             pilots=Count('localscan_items')).order_by('-pilots', 'name')
+
+    def show_factions_bar(self, scan):
+        """Only show factions bar if they account for 20% of the pilots"""
+        pilots = sum(faction.pilots for faction in self.get_factions(scan))
+        return (100.0 / scan.items.count()) * pilots > 20
 
 
     def get_alliances(self, scan):
