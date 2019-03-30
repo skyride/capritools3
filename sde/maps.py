@@ -139,3 +139,10 @@ MapItem = [
     ('y', 'y'),
     ('z', 'z')
 ]
+
+Faction = [
+    ('id', 'factionID'),
+    ('name', 'factionName'),
+    ('description', 'description'),
+    ('system_id', 'solarSystemID')
+]

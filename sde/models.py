@@ -75,6 +75,17 @@ class SystemJump(models.Model):
         return "%s -> %s" % (self.origin.name, self.destination.name)
 
 
+# NPC Entities
+class Faction(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=128, db_index=True)
+    description = models.TextField()
+    system = models.ForeignKey(System, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 # Types
 class MarketGroup(models.Model):
     id = models.IntegerField(primary_key=True)

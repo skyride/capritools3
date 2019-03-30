@@ -34,5 +34,6 @@ class Command(BaseCommand):
             updater.update_model_upsert(Constellation, "mapConstellations")
             updater.update_model_upsert(System, "mapSolarSystems")
             updater.update_model_upsert(SystemJump, "mapSolarSystemJumps", no_key=True)
+            updater.update_model_upsert(Faction, "chrFactions")
             updater.update_model_upsert(Station, "staStations")
             updater.update_model_upsert(MapItem, "mapDenormalize")
