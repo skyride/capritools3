@@ -48,7 +48,7 @@ class LocalscanParser(object):
             for affiliation in affiliations
         ])
 
-        return self.scan
+        return len(ids)
 
 
     def _names_to_ids(self, text):
