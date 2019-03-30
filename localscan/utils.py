@@ -5,6 +5,7 @@ from core.esi import ESI
 from core.models import Alliance, Corporation, Character
 from core.utils import chunker
 
+from .exceptions import LocalscanParseException
 from .models import Localscan, LocalscanItem
 
 
@@ -22,7 +23,9 @@ class LocalscanParser(object):
     def parse(self):
         self.scan = Localscan.objects.create(raw=self.text)
 
-        ids = self._names_to_ids(self.text)
+        ids = list(self._names_to_ids(self.text))
+        if len(ids) < 1:
+            raise LocalscanParseException("No character names found in your paste")
         affiliations = self._ids_to_affiliations(ids)
 
         # Perform hydration
@@ -44,6 +47,8 @@ class LocalscanParser(object):
             )
             for affiliation in affiliations
         ])
+
+        return self.scan
 
 
     def _names_to_ids(self, text):

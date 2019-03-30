@@ -33,6 +33,8 @@ class LocalscanParseTests(TestCase):
 
 
     def test_parse(self):
+        from .exceptions import LocalscanParseException
         from .utils import LocalscanParser
 
         LocalscanParser("Capri Sun KraftFoods").parse()
+        self.assertRaises(LocalscanParseException, LocalscanParser("").parse)
