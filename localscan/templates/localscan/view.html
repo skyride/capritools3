@@ -6,6 +6,10 @@
     {{ scan.created|date:"H:i" }}
 {% endblock %}
 
+{% block extra_head %}
+    <script src="{% static 'localscan/js/localscan.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <br />
     <div class="container">
@@ -20,32 +24,38 @@
 
         <div class="row">
             <div class="col-sm">
-                {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
                 {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
-                {% include "localscan/_percentage_bar.html" with items=alliances pilot_count=pilot_count %}
-                {% include "localscan/_percentage_bar.html" with items=corporations pilot_count=pilot_count %}
+                {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
+                {% include "localscan/_percentage_bar_tuple.html" with items=alliances pilot_count=pilot_count %}
+                {% if corporations|length < 30 %}
+                    {% include "localscan/_percentage_bar_tuple.html" with items=corporations pilot_count=pilot_count %}
+                {% endif %}
             </div>
         </div>
 
         <br />
 
         <div class="row">
-            <div class="col-sm-4">
-                {% include "localscan/_item_list.html" with items=alliances %}
-            </div>
-            <div class="col-sm-4">
-                {% include "localscan/_item_list.html" with items=factions %}
-                {% include "localscan/_item_list_sm.html" with items=corporations %}
-            </div>
-            <div class="col-sm-4">
-                {% include "localscan/_coalition_list.html" with items=coalitions %}
-            </div>
+            {% if coalitions|length > 0 %}
+                <div class="col-lg-5">
+                    {% include "localscan/_item_list.html" with items=alliances %}
+                </div>
+                <div class="col-lg-4">
+                    {% include "localscan/_faction_list.html" with items=factions %}
+                    {% include "localscan/_item_list_sm.html" with items=corporations %}
+                </div>
+                <div class="col-lg-3">
+                    {% include "localscan/_coalition_list.html" with items=coalitions %}
+                </div>
+            {% else %}
+                <div class="col-lg-6">
+                    {% include "localscan/_item_list.html" with items=alliances %}
+                </div>
+                <div class="col-lg-6">
+                    {% include "localscan/_faction_list.html" with items=factions %}
+                    {% include "localscan/_item_list_sm.html" with items=corporations %}
+                </div>
+            {% endif %}
         </div>
     </div>
-
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-    </script>
 {% endblock %}

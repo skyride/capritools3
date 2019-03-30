@@ -13,6 +13,7 @@ td.scan-name {
 
 td.icon {
     padding: 0;
+    vertical-align: middle;
 }
 td.icon > img {
     width: 46px;
@@ -20,13 +21,39 @@ td.icon > img {
 
 td.icon-condensed {
     padding: 0;
+    vertical-align: middle;
 }
 td.icon-condensed > img {
     width: 32px;
+}
+
+td.count-colour {
+    padding: 0;
+    vertical-align: middle;
+    line-height: 46px;
+}
+td.count-colour-sm {
+    padding: 0;
+    vertical-align: middle;
+    line-height: 32px;
+}
+td.count-colour > div {
+    position: absolute;
+    width: 8%;
+    height: 100%;
+}
+td.count-colour-sm > div {
+    position: absolute;
+    width: 8%;
+    height: 100%;
 }
 
 div.progress {
     height: 1.2rem;
     margin-bottom: 0.2rem;
     font-size: 14px;
+}
+
+div.progress-bar {
+    overflow: hidden;
 }

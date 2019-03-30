@@ -96,5 +96,6 @@ class LocalscanParser(object):
                         alliance_coalition_map[alliance['id']] = obj
         else:
             self.coalitions_parsed = False
+        print(alliance_coalition_map)
 
         return alliance_coalition_map

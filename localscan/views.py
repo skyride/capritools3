@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, F
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -39,13 +39,46 @@ class LocalscanView(View):
         context = {
             'scan': scan,
             'pilot_count': scan.items.count(),
-            'factions': Faction.objects.filter(localscan_items__scan=scan).annotate(
-                pilots=Count('localscan_items')).order_by('-pilots'),
-            'alliances': Alliance.objects.filter(localscan_items__scan=scan).annotate(
-                pilots=Count('localscan_items')).order_by('-pilots'),
-            'corporations': Corporation.objects.filter(localscan_items__scan=scan).annotate(
-                pilots=Count('localscan_items')).order_by('-pilots'),
-            'coalitions': Coalition.objects.filter(items__scan=scan).annotate(
-                pilots=Count('items')).order_by('-pilots')
+            'factions': list(self.get_factions(scan)),
+            'alliances': list(self.get_alliances(scan)),
+            'corporations': list(self.get_corporations(scan)),
+            'coalitions': list(self.get_coalitions(scan)),
         }
         return render(request, "localscan/view.html", context)
+
+
+    def get_factions(self, scan):
+        return Faction.objects.filter(localscan_items__scan=scan).annotate(
+            pilots=Count('localscan_items')).order_by('-pilots', 'name')
+
+
+    def get_alliances(self, scan):
+        for alliance in self._get_alliances(scan):
+            first = LocalscanItem.objects.filter(scan=scan, alliance=alliance, coalition__isnull=False).first()
+            if first is not None:
+                yield first.coalition.id, first.coalition.colour, alliance
+            else:
+                yield None, None, alliance
+
+    def _get_alliances(self, scan):
+        return Alliance.objects.filter(localscan_items__scan=scan).annotate(
+            pilots=Count('localscan_items')
+        ).order_by('-pilots', 'localscan_items__coalition__name', 'name')
+
+
+    def get_corporations(self, scan):
+        for corporation in self._get_corporations(scan):
+            first = LocalscanItem.objects.filter(scan=scan, corporation=corporation, coalition__isnull=False).first()
+            if first is not None:
+                yield first.coalition.id, first.coalition.colour, corporation
+            else:
+                yield None, None, corporation
+
+    def _get_corporations(self, scan):
+        return Corporation.objects.filter(localscan_items__scan=scan).annotate(
+            pilots=Count('localscan_items')).order_by('-pilots', 'localscan_items__coalition__name', 'name')
+
+
+    def get_coalitions(self, scan):
+        return Coalition.objects.filter(scan=scan).annotate(
+            pilots=Count('items')).order_by('-pilots', 'name')

@@ -1,8 +1,12 @@
 {% load mathfilters %}
 {% if items|length > 0 %}
     <div class="progress">
-        {% for item in items %}
-            {% if item.colour %}
+        {% for coalition_id, colour, item in items %}
+            {% if colour %}
+                <div    class="progress-bar" role="progressbar"
+                        data-toggle="tooltip" data-placement="top" title="{{ item }} [{{ item.pilots }}]"
+                        style="width: {{ 100|div:pilot_count|mul:item.pilots }}%; background-color: {{ colour }};">
+            {% elif item.colour %}
                 <div    class="progress-bar" role="progressbar"
                         data-toggle="tooltip" data-placement="top" title="{{ item }} [{{ item.pilots }}]"
                         style="width: {{ 100|div:pilot_count|mul:item.pilots }}%; background-color: {{ item.colour }};">
