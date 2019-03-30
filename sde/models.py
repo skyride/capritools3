@@ -85,6 +85,9 @@ class Faction(models.Model):
     def __str__(self):
         return self.name
 
+    def image128(self):
+        return f"https://imageserver.eveonline.com/Alliance/{self.id}_128.png"
+
 
 # Types
 class MarketGroup(models.Model):

@@ -15,5 +15,18 @@ td.icon {
     padding: 0;
 }
 td.icon > img {
+    width: 46px;
+}
+
+td.icon-condensed {
+    padding: 0;
+}
+td.icon-condensed > img {
     width: 32px;
+}
+
+div.progress {
+    height: 1.2rem;
+    margin-bottom: 0.2rem;
+    font-size: 14px;
 }

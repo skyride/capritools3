@@ -38,3 +38,11 @@ class LocalscanParseTests(TestCase):
 
         LocalscanParser("Capri Sun KraftFoods").parse()
         self.assertRaises(LocalscanParseException, LocalscanParser("").parse)
+
+        p = LocalscanParser("Capri Sun KraftFoods")
+        self.assertEqual(p.parse(), 1)
+        self.assertEqual(p.scan.items.count(), 1)
+
+        p = LocalscanParser("Capri Sun KraftFoods\nDmitri Vakarian")
+        self.assertEqual(p.parse(), 2)
+        self.assertEqual(p.scan.items.count(), 2)

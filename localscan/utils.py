@@ -26,7 +26,7 @@ class LocalscanParser(object):
         ids = list(self._names_to_ids(self.text))
         if len(ids) < 1:
             raise LocalscanParseException("No character names found in your paste")
-        affiliations = self._ids_to_affiliations(ids)
+        affiliations = list(self._ids_to_affiliations(ids))
 
         # Perform hydration
         alliance_ids = [obj['alliance_id'] for obj in affiliations if 'alliance_id' in obj]
@@ -56,7 +56,7 @@ class LocalscanParser(object):
         Translate a set of character names to ids.
         """
         api = ESI()
-        for chunk in chunker(set(text.split("\n")), 500):
+        for chunk in chunker(text.replace("\r", "").split("\n"), 500):
             response = api.post("/latest/universe/ids/", json=chunk)
             for character in response.json().get('characters', []):
                 yield character['id']

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'psqlextra',
     'bootstrap4',
     'django_tables2',
+    'mathfilters',
 
     'sde',
     'core',

@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+    ({{ pilot_count }})
+    {{ scan.created|date:"H:i" }}
+{% endblock %}
+
+{% block body %}
+    <br />
+    <div class="container">
+        <div class="row align-items-end">
+            <div class="col-sm">
+                <h2>{{ pilot_count }} Pilot{% if pilot_count > 1 %}s{% endif %}</h2>
+            </div>
+            <div class="col-sm text-right">
+                <h5>{{ scan.created }} ET</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
+                {% include "localscan/_percentage_bar.html" with items=alliances pilot_count=pilot_count %}
+                {% include "localscan/_percentage_bar.html" with items=corporations pilot_count=pilot_count %}
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-sm-5">
+                {% include "localscan/_item_list.html" with items=alliances %}
+            </div>
+            <div class="col-sm-5">
+                {% include "localscan/_item_list.html" with items=factions %}
+                {% include "localscan/_item_list_sm.html" with items=corporations %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

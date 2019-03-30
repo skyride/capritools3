@@ -1,0 +1,11 @@
+{% load mathfilters %}
+{% if items.count > 0 %}
+    <div class="progress">
+        {% for item in items %}
+            <div    class="progress-bar bg-{% cycle 'info' 'success' 'warning' 'danger' %}"
+                    role="progressbar" style="width: {{ 100|div:pilot_count|mul:item.pilots }}%">
+                {{ item }} [{{ item.pilots }}]
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
