@@ -5,7 +5,7 @@ def generate_key():
     return get_random_string(8)
 
 
-def chunk(items, chunk_size):
+def chunker(items, chunk_size):
     """
     Chunk a list of items into chunks of the maximum defined size.
     """
