@@ -3,6 +3,7 @@ django<2.3
 psycopg2-binary
 python-memcached
 pywatchman
+gunicorn
 django-bootstrap4
 django-postgres-extra==1.20
 django-tables2==2.0.5
