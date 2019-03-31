@@ -5,6 +5,8 @@ from django.db import transaction
 from psqlextra.query import ConflictAction
 from psqlextra.util import postgres_manager
 
+from core.utils import chunker
+
 from . import maps
 
 # Defines some functions for importing
@@ -84,9 +86,9 @@ class ModelUpdater:
                     for i, key in enumerate([x[0] for x in table_map])
                 }
 
-        objects = list(get_objects())
         with postgres_manager(Model) as manager:
-            manager.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(objects)
+            for objects in chunker(get_objects(), 10000):
+                manager.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(list(objects))
         print("%s objects" % Model.objects.count())
 
 
