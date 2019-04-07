@@ -7,7 +7,8 @@ def presentation(request):
     """Adds context for the purpose of presentation."""
     return {
         'nav_title': settings.TITLE,
-        'theme': "flatly"
+        'theme': "flatly",
+        'VIEW_CACHE_TIME': settings.VIEW_CACHE_TIME
     }
 
 

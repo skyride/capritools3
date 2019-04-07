@@ -40,10 +40,10 @@ class LocalscanView(View):
             'scan': scan,
             'pilot_count': scan.items.count(),
             'show_factions_bar': self.show_factions_bar(scan),
-            'factions': list(self.get_factions(scan)),
-            'alliances': list(self.get_alliances(scan)),
-            'corporations': list(self.get_corporations(scan)),
-            'coalitions': list(self.get_coalitions(scan)),
+            'factions': self.get_factions(scan),
+            'alliances': self.get_alliances(scan),
+            'corporations': self.get_corporations(scan),
+            'coalitions': self.get_coalitions(scan)
         }
         return render(request, "localscan/view.html", context)
 

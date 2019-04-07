@@ -26,7 +26,6 @@ DEBUG = ENV == "dev"
 TITLE = os.environ.get('TITLE', "Capritools")
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,6 +102,11 @@ CACHES = {
         'LOCATION': 'memcached:11211',
     }
 }
+if DEBUG:
+    VIEW_CACHE_TIME = 5
+else:
+    VIEW_CACHE_TIME = int(os.environ.get("VIEW_CACHE_TIME", 3600))
+
 
 
 # Password validation

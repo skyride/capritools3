@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load cache core static %}
 
 {% block title %}
     ({{ pilot_count }})
@@ -12,52 +12,56 @@
 
 {% block body %}
     <br />
-    <div class="container">
-        <div class="row align-items-end">
-            <div class="col-sm">
-                <h2>{{ pilot_count }} Pilot{% if pilot_count > 1 %}s{% endif %}</h2>
-            </div>
-            <div class="col-sm text-right">
-                <h5>{{ scan.created }} ET</h5>
-            </div>
-        </div>
+    {% cache VIEW_CACHE_TIME localscan_view %}
+        {% with coalitions=coalitions|gentolist factions=factions|gentolist alliances=alliances|gentolist corporations=corporations|gentolist %}
+            <div class="container">
+                <div class="row align-items-end">
+                    <div class="col-sm">
+                        <h2>{{ pilot_count }} Pilot{% if pilot_count > 1 %}s{% endif %}</h2>
+                    </div>
+                    <div class="col-sm text-right">
+                        <h5>{{ scan.created }} ET</h5>
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-sm">
-                {% if show_factions_bar %}
-                    {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
-                {% endif %}
-                {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
-                {% include "localscan/_percentage_bar_tuple.html" with items=alliances pilot_count=pilot_count %}
-                {% if corporations|length < 30 %}
-                    {% include "localscan/_percentage_bar_tuple.html" with items=corporations pilot_count=pilot_count %}
-                {% endif %}
+                <div class="row">
+                    <div class="col-sm">
+                        {% if show_factions_bar %}
+                            {% include "localscan/_percentage_bar.html" with items=factions pilot_count=pilot_count %}
+                        {% endif %}
+                        {% include "localscan/_percentage_bar.html" with items=coalitions pilot_count=pilot_count %}
+                        {% include "localscan/_percentage_bar_tuple.html" with items=alliances pilot_count=pilot_count %}
+                        {% if corporations|length < 30 %}
+                            {% include "localscan/_percentage_bar_tuple.html" with items=corporations pilot_count=pilot_count %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    {% if coalitions|length > 0 %}
+                        <div class="col-lg-5">
+                            {% include "localscan/_item_list.html" with items=alliances %}
+                        </div>
+                        <div class="col-lg-4">
+                            {% include "localscan/_faction_list.html" with items=factions %}
+                            {% include "localscan/_item_list_sm.html" with items=corporations %}
+                        </div>
+                        <div class="col-lg-3">
+                            {% include "localscan/_coalition_list.html" with items=coalitions %}
+                        </div>
+                    {% else %}
+                        <div class="col-lg-6">
+                            {% include "localscan/_item_list.html" with items=alliances %}
+                        </div>
+                        <div class="col-lg-6">
+                            {% include "localscan/_faction_list.html" with items=factions %}
+                            {% include "localscan/_item_list_sm.html" with items=corporations %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-
-        <br />
-
-        <div class="row">
-            {% if coalitions|length > 0 %}
-                <div class="col-lg-5">
-                    {% include "localscan/_item_list.html" with items=alliances %}
-                </div>
-                <div class="col-lg-4">
-                    {% include "localscan/_faction_list.html" with items=factions %}
-                    {% include "localscan/_item_list_sm.html" with items=corporations %}
-                </div>
-                <div class="col-lg-3">
-                    {% include "localscan/_coalition_list.html" with items=coalitions %}
-                </div>
-            {% else %}
-                <div class="col-lg-6">
-                    {% include "localscan/_item_list.html" with items=alliances %}
-                </div>
-                <div class="col-lg-6">
-                    {% include "localscan/_faction_list.html" with items=factions %}
-                    {% include "localscan/_item_list_sm.html" with items=corporations %}
-                </div>
-            {% endif %}
-        </div>
-    </div>
+        {% endwith %}
+    {% endcache %}
 {% endblock %}
