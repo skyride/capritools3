@@ -16,9 +16,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ["*"]
 
-ENV = os.environ.get('ENV')
-SECRET_KEY = os.environ.get('SECRET_KEY', "DEVELOPMENT")
-DEBUG = ENV == "dev"
+SECRET_KEY = os.environ['SECRET_KEY']
+DEBUG = bool(int(os.environ.get('DEBUG', False)))
 
 # Personalisation settings
 # These default to those used on the main capritools instance, but
@@ -84,11 +83,11 @@ WSGI_APPLICATION = 'capritools.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'psqlextra.backend',
-        'HOST': os.environ.get('DATABASE_HOST', "db"),
-        'NAME': os.environ.get('DATABASE_NAME', "postgres"),
-        'USER': os.environ.get('DATABASE_USER', "postgres"),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ""),
-        'PORT': os.environ.get('DATABASE_PORT', 5432)
+        'HOST': os.environ['DB_HOST'],
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'PORT': os.environ.get('DB_PORT', "")
     },
     'sde': {
         'ENGINE': "django.db.backends.sqlite3",
@@ -98,8 +97,8 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'memcached:11211',
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': os.environ['REDIS_URL']
     }
 }
 if DEBUG:

@@ -1,11 +1,9 @@
 bcrypt==3.1.6
 django<2.3
-psycopg2-binary
-python-memcached
-pywatchman
-gunicorn
-django-bootstrap4
+psycopg2==2.8.5
+django-bootstrap4==1.1.1
 django-postgres-extra==1.20
+django-redis-cache==2.1.0
 django-tables2==2.0.5
 django-mathfilters==0.4.0
-requests
+requests==2.23.0
