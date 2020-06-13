@@ -117,9 +117,9 @@ class Group(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     category = models.ForeignKey(Category, related_name="groups", on_delete=models.CASCADE)
     icon_id = models.IntegerField(null=True)
-    anchored = models.BooleanField()
-    anchorable = models.BooleanField()
-    fittable_non_singleton = models.BooleanField()
+    anchored = models.BooleanField(null=True)
+    anchorable = models.BooleanField(null=True)
+    fittable_non_singleton = models.BooleanField(null=True)
     published = models.BooleanField()
 
     def __str__(self):
@@ -130,7 +130,7 @@ class Type(models.Model):
     id = models.IntegerField(primary_key=True)
     group = models.ForeignKey(Group, related_name="types", null=True, default=None, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_index=True)
-    description = models.TextField()
+    description = models.TextField(null=True)
     mass = models.FloatField(null=True)
     volume = models.FloatField(null=True)
     capacity = models.FloatField(null=True)
@@ -165,7 +165,7 @@ class AttributeCategory(models.Model):
 
 class AttributeType(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=400)
+    name = models.CharField(max_length=400, null=True)
     category = models.ForeignKey(AttributeCategory, null=True, db_constraint=False, related_name="types", on_delete=models.CASCADE)
 
     description = models.CharField(max_length=1000, null=True)
