@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy files
 COPY . /app
+RUN mkdir /data
 
 # Collectstatic, fake these values because they're required even though
 # we don't use them.
