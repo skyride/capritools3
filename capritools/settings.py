@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ["*"]
@@ -145,3 +149,10 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "/static/"
+
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    environment=os.environ.get("SENTRY_ENVIRONMENT"),
+    integrations=[DjangoIntegration(), RedisIntegration()],
+    send_default_pii=True)
